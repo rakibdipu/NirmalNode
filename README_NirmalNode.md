@@ -4,6 +4,14 @@ Welcome to **NirmalNode**, a Green IoT and Adaptive AI-Assisted Local Air Purifi
 
 ---
 
+## 🎬 Project Demo Video
+
+[![NirmalNode Demo Video](https://img.youtube.com/vi/-UmP3GxATWU/maxresdefault.jpg)](https://youtu.be/-UmP3GxATWU)
+
+> 🔗 **Watch on YouTube:** [https://youtu.be/-UmP3GxATWU](https://youtu.be/-UmP3GxATWU)
+
+---
+
 ## 🚀 Quick Start Guide
 
 ### Option 1: Direct USB Web Browser Connection (Zero Setup!)
