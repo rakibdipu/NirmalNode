@@ -3,7 +3,7 @@
 # 🌿 NirmalNode
 ### IoT-Based Air Quality Monitoring & Adaptive AI Purification System
 
-[![Demo Video](https://img.youtube.com/vi/-UmP3GxATWU/maxresdefault.jpg)](https://youtu.be/-UmP3GxATWU)
+[![NirmalNode Demo Video](docs/images/demo_thumbnail.jpg)](https://youtu.be/-UmP3GxATWU)
 
 **▶️ [Watch Full Demo on YouTube](https://youtu.be/-UmP3GxATWU)**
 
