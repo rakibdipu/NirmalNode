@@ -24,6 +24,45 @@
 
 ---
 
+## 🖼️ Screenshots & Diagrams
+
+### 🏗️ System Architecture
+![System Architecture](docs/images/edge_cloud_architecture.png)
+
+### 📊 Live Dashboard
+![Dashboard Screenshot](docs/images/dashboard_screenshot.jpg)
+
+### 🔧 Hardware Block Diagram
+![Hardware Block Diagram](docs/images/hardware_block_diagram.png)
+
+### 💻 Software Architecture
+![Software Block Diagram](docs/images/software_block_diagram.png)
+
+### 🤖 AI Model Pipeline
+![AI Model Arena Pipeline](docs/images/ai_model_arena_pipeline.png)
+
+### 📈 Incremental Learning Pipeline
+![Incremental Learning](docs/images/incremental_learning_pipeline.png)
+
+### 🧠 XAI Feature Importance
+![XAI Feature Importance](docs/images/xai_feature_importance.png)
+
+### 📉 XAI Dashboard Panel
+![XAI Dashboard](docs/images/xai_dashboard_screenshot.jpg)
+
+### 📊 Model Performance (Confusion Matrix)
+![Confusion Matrix](docs/images/confusion_matrix.png)
+
+### 📉 ROC & PR Curves
+![ROC PR Curves](docs/images/roc_pr_curves.png)
+
+### 🔥 Real-World Hotspot Detection
+| Smoke | Welding Fumes |
+|---|---|
+| ![Hotspot Smoke](docs/images/hotspot_smoke.jpg) | ![Hotspot Welding](docs/images/hotspot_welding.jpg) |
+
+---
+
 ## ✨ Features
 
 | Feature | Description |
@@ -83,6 +122,7 @@ NirmalNode/
 ├── 📁 training/                    # ML training scripts
 ├── 📁 evaluation/                  # Model evaluation & metrics
 ├── 📁 experiments/                 # Experiment logs & results
+├── 📁 docs/images/                 # All diagrams & screenshots
 │
 ├── 🌐 index.html                   # Main live dashboard (open in browser)
 ├── 🎨 style.css                    # Dashboard styling
@@ -150,18 +190,6 @@ model.partial_fit(X_live, y_live)  # Updates in real-time, every reading!
 - **Output:** Predicted PM2.5 concentration at t+1h and t+2h
 - **Error metric:** Prequential MAE (shown live in dashboard)
 - **XAI:** SHAP feature importance updated every 10 readings
-
----
-
-## 📊 Dashboard Preview
-
-The live web dashboard shows:
-- 🟢🟡🔴 **EPA AQI Color Gauge** (Good → Hazardous)
-- 📈 **Real-time PM time-series chart** with AI forecast overlay
-- 📉 **Prequential learning curve** (online MAE over time)
-- 🧠 **XAI feature importance bar chart**
-- 🌡️ **Live sensor grid** (all 6 sensor channels)
-- 💾 **One-click CSV export**
 
 ---
 
