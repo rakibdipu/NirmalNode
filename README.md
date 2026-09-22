@@ -202,8 +202,11 @@ model.partial_fit(X_live, y_live)  # Updates in real-time, every reading!
 
 ## 👨‍💻 Author
 
-**Rakib** — Capstone Project, UFT  
-📧 GitHub: [@rakibdipu](https://github.com/rakibdipu)
+**Rakib**  
+🎓 Department of Internet of Things and Robotics Engineering (IRE)  
+🏛️ University of Frontier Technology, Bangladesh (UFTB)  
+📌 Capstone Project  
+🐙 GitHub: [@rakibdipu](https://github.com/rakibdipu)
 
 ---
 
