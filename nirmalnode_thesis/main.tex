@@ -1,0 +1,108 @@
+\documentclass[12pt,a4paper,oneside]{report}
+
+% ---------- Core packages ----------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{times}
+\usepackage[margin=1in,left=1.5in]{geometry}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{tocloft}
+\usepackage{fancyhdr}
+\setlength{\headheight}{15pt}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage[hidelinks]{hyperref}
+\usepackage{cleveref}
+\usepackage{placeins}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,fit,calc}
+
+% ---------- Spacing ----------
+\onehalfspacing
+
+% ---------- Headers ----------
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancyhead[L]{\nouppercase{\leftmark}}
+\fancyhead[R]{\thepage}
+\fancypagestyle{plain}{%
+  \fancyhf{}
+  \fancyhead[R]{\thepage}
+  \renewcommand{\headrulewidth}{0.4pt}
+}
+
+% ---------- Chapter/section style ----------
+\titleformat{\chapter}[display]
+  {\normalfont\bfseries\Large}{\chaptertitlename\ \thechapter}{10pt}{\Large}
+\titlespacing*{\chapter}{0pt}{-20pt}{20pt}
+
+% ---------- TOC depth ----------
+\setcounter{tocdepth}{3}
+\setcounter{secnumdepth}{3}
+
+% ---------- Figure / Table caption style ----------
+\captionsetup{font=small,labelfont=bf,margin=10pt}
+
+% ---------- Placeholder command for missing user-supplied facts ----------
+% Use \TODO{...} for anything the student must fill in personally
+% (names, university details, photographs, exact experimental numbers).
+\newcommand{\TODO}[1]{\textcolor{red}{\textbf{[TODO: #1]}}}
+\newcommand{\FIGPLACE}[3]{%
+  % #1 = label, #2 = caption, #3 = width
+  \begin{figure}[htbp]
+    \centering
+    \fbox{\parbox[c][4cm]{#3\textwidth}{\centering \small \textit{Figure placeholder --}\\ #2 \\ \TODO{insert photo/scan here}}}
+    \caption{#2}
+    \label{#1}
+  \end{figure}
+}
+
+\begin{document}
+
+% ================= FRONT MATTER =================
+\pagenumbering{roman}
+
+\input{front/titlepage}
+\input{front/declaration}
+\input{front/approval}
+\input{front/acknowledgement}
+\input{front/abstract}
+
+\tableofcontents
+\clearpage
+\listoffigures
+\clearpage
+\listoftables
+\clearpage
+\input{front/abbreviations}
+
+\clearpage
+\pagenumbering{arabic}
+
+% ================= CHAPTERS =================
+\input{chapters/chapter1_introduction}
+\input{chapters/chapter2_literature_review}
+\input{chapters/chapter3_methodology}
+\input{chapters/chapter4_experimental_design}
+\input{chapters/chapter5_conclusion}
+
+% ================= BACK MATTER =================
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\input{front/appendix}
+
+\end{document}

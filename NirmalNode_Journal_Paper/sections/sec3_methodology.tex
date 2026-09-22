@@ -1,0 +1,206 @@
+
+\section{Materials and Methods}
+\label{sec:method}
+
+\subsection{System Architecture}
+NirmalNode implements five functional layers: \textbf{L1}~Environmental Monitoring,
+\textbf{L2}~IoT Data Acquisition (ESP32, sensors, relay), \textbf{L3}~Cloud Storage
+(SQLite, REST API), \textbf{L4}~Adaptive AI (Model Arena, XAI), and
+\textbf{L5}~Local Purification (cyclone--HEPA-H13--carbon, 12~V fan).
+
+\subsection{Hardware}
+\label{sec:hw}
+
+The hardware core is an Espressif ESP32-WROOM-32 (240~MHz, 520~KB SRAM, Wi-Fi 802.11
+b/g/n). Table~\ref{tab:hw} details all components. MOS sensors (MQ135, MQ136,
+MiCS-4514, MP135) underwent 48-hour burn-in followed by clean-air $R_0$ calibration
+(50-sample average at PM$_{2.5}<12$~\ugsm) with BME280 temperature/humidity compensation.
+These MOS channels are used as relative qualitative indicators of gas-phase pollutant
+presence; they are not calibrated against reference instruments and should not be
+interpreted as providing absolute gas concentration measurements~\citep{lowcostpm2025acs,
+mos2024trac}.
+
+\begin{table}[htbp]
+\centering
+\caption{Hardware components, interfaces, and specifications.}
+\label{tab:hw}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}p{2.8cm}p{2.6cm}p{1.5cm}p{1.1cm}p{4.8cm}@{}}
+\toprule
+\textbf{Component} & \textbf{Parameter} & \textbf{Interface} &
+\textbf{Supply} & \textbf{Key Specification} \\
+\midrule
+ESP32-WROOM-32    & Compute / Comm.          & UART/ADC/I$^2$C & 5~V  & 240~MHz, 520~KB SRAM, Wi-Fi \\
+Plantower PMS5003 & PM$_{1/2.5/10}$, 6-bin  & UART2 (GPIO 16/17) & 5~V  & $\pm$10\%; 100--500~\ugsm \\
+MiCS-4514         & CO / NO$_2$             & ADC1 (GPIO 34/35)  & 3.3--5~V & 1--1000~ppm (CO); 0.05--10~ppm (NO$_2$) \\
+MQ135             & NH$_3$, benzene, smoke  & ADC1 (GPIO 32)     & 5~V  & $R_0=8.4$--$12.3$~k$\Omega$ \\
+MQ136             & H$_2$S                  & ADC1 (GPIO 33)     & 5~V  & $R_0=5.2$--$8.9$~k$\Omega$ \\
+MP135             & VOC composite           & ADC1 (GPIO 36)     & 5~V  & $R_0=7.1$--$11.6$~k$\Omega$ \\
+Bosch BME280      & Temp / RH / Pressure    & I$^2$C (GPIO 21/22)& 3.3~V & $\pm0.5^\circ$C, $\pm$3\% RH \\
+Relay + 12~V fan  & Fan actuation           & GPIO 25            & 12~V & 1.5~m$^3$/min; opto-isolated \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.90\linewidth]{hardware_block_diagram.png}
+\caption{Hardware block diagram showing ADC1 pin assignments (GPIO 32--36), UART2 link
+  to PMS5003, I$^2$C bus to BME280, and optocoupled relay driving the 12~V blower.}
+\label{fig:hw}
+\end{figure}
+
+\subsection{Data Acquisition and Feature Engineering}
+
+The firmware executes a 2-second loop. An Exponential Moving Average (EMA) filter
+suppresses sensor jitter:
+\begin{equation}
+\hat{x}_{\mathrm{EMA}}[k] = \alpha x_{\mathrm{raw}}[k] + (1-\alpha)\hat{x}_{\mathrm{EMA}}[k-1],
+\quad \alpha=0.20
+\label{eq:ema}
+\end{equation}
+
+Each cycle assembles a 14-dimensional feature vector $\mathbf{x}[k]$ comprising:
+three PM mass concentrations (PM$_{1.0}$, PM$_{2.5}$, PM$_{10}$); four optical bin counts
+($c_{>0.3\mu m}$, $c_{>0.5}$, $c_{>1.0}$, $c_{>2.5}$); five MOS ADC signals
+(MQ135, MQ136, MiCS RED/CO, MiCS NOX/NO$_2$, MP135); and two computed temporal
+features ($\Delta$PM$_{2.5}[k-1]$, $\hat{x}_{\mathrm{EMA}}$). Payloads are serialized
+to JSON and dispatched via HTTP POST to the Flask backend \texttt{/api/ingest} endpoint.
+
+\subsection{Adaptive AI Forecasting: Online Model Arena}
+\label{sec:ai}
+
+Instead of a single static estimator, NirmalNode runs nine incremental learners in
+parallel, spanning regularized SGD, Passive-Aggressive regression, their ensemble, and
+an EMA non-ML baseline. Each maintains its own online-normalized running StandardScaler.
+The nine estimators are: SGD with $L_2$/Lasso/$L_{1,2}$/Huber/SVR-$\varepsilon$ losses
+(M1--M5), Passive-Aggressive with $C=1.0$ and $C=0.1$ (M6--M7), a blended SGD+PA
+ensemble (M8), and an EMA baseline (M9).
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.98\linewidth]{ai_model_arena_pipeline.png}
+\caption{Adaptive AI Model Arena and closed-loop predictive actuation architecture.
+  Continuous sensor streams are online-normalized and dispatched across nine streaming
+  estimators (M1--M5 regularized SGD variants, M6--M7 Passive-Aggressive variants, M8
+  SGD+PA champion, and M9 EMA baseline) under the prequential test-then-train protocol.
+  The elected champion drives the Predictive Decision Engine and 3-stage physical filtration
+  with strict temporal causality and closed-loop feedback.}
+\label{fig:arena}
+\end{figure}
+
+The blended champion M8 combines predictions as:
+\begin{equation}
+\hat{y}_{\mathrm{M8}}[k] = 0.60\,\hat{y}_{\mathrm{SGD}}[k] + 0.40\,\hat{y}_{\mathrm{PA}}[k]
+\label{eq:blend}
+\end{equation}
+
+\noindent The blend weights $\alpha_{\mathrm{SGD}}=0.60$ and $\alpha_{\mathrm{PA}}=0.40$
+were empirically selected via a manual grid search over $\alpha \in \{0.3, 0.4, 0.5,
+0.6, 0.7\}$ evaluated on the first 100 training samples using held-out one-step-ahead
+prequential error. Weight 0.6/0.4 yielded the lowest cold-start MAE among candidates and
+was fixed for all subsequent evaluation.
+
+\subsection{Prequential Evaluation Protocol}
+
+In streaming environments, static train/test splits are methodologically inappropriate.
+The Model Arena employs the \textbf{prequential (test-then-train)} protocol~\citep{gama2014survey}:
+for each arriving sample $k$, the existing model first predicts $\hat{y}[k]$, metrics
+are scored, then parameters update via \texttt{partial\_fit}($\mathbf{x}[k], y[k]$).
+Critically, champion election at step $k$ uses only the cumulative MAE accumulated over
+samples $1, \ldots, k-1$ (i.e., before the current true label is observed), ensuring
+no temporal leakage between champion selection and the actuation decision at step $k$.
+Cumulative metrics update as:
+\begin{equation}
+\mathrm{MAE}[k]=\tfrac{1}{k}\sum_{i=1}^k|y[i]-\hat{y}[i]|,\;\;
+\mathrm{RMSE}[k]=\sqrt{\tfrac{1}{k}\sum_{i=1}^k(y[i]-\hat{y}[i])^2},\;\;
+R^2[k]=1-\frac{\sum(y-\hat{y})^2}{\sum(y-\bar{y})^2}
+\label{eq:metrics}
+\end{equation}
+
+A custom rolling-window drift detector (inspired by the ADWIN concept~\citep{bifet2007learning}
+but not identical to it) monitors absolute error: when the 15-sample window mean exceeds
+the 60-sample baseline mean by $2\sigma$, a drift alarm resets champion election.
+
+\subsection{Predictive Decision Engine}
+
+The decision engine translates continuous forecasts into binary relay commands via an
+asymmetric hysteresis rule:
+\begin{equation}
+d[k]=\begin{cases}
+1\;(\text{FAN\_ON})  & \hat{y}_{t+h}[k]\ge\tau \;\text{or}\; x[k]\ge(\tau-\gamma) \\
+0\;(\text{FAN\_OFF}) & \hat{y}_{t+h}[k]<(\tau-\delta) \;\text{and}\; x[k]<(\tau-\delta)
+\end{cases}
+\label{eq:decision}
+\end{equation}
+
+\noindent where $\tau=35.5$~\ugsm{} is the operational decision threshold adopted from
+the US EPA 24-hour PM$_{2.5}$ AQI breakpoint (35.5--55.4~\ugsm{} corresponds to
+AQI~101--150)~\citep{usepaaqi2024}. \textbf{Note:} this breakpoint is defined for 24-hour
+averaged concentrations and is used here as an operational engineering trigger only; it is
+not an instantaneous occupational exposure limit. $\delta=3.0$~\ugsm{} is the hysteresis
+dead-band and $\gamma=5.0$~\ugsm{} is the reactive safety fallback margin. When $d=1$,
+the server returns \texttt{\{"fan":"FAN\_ON"\}} within the same HTTP transaction and
+ESP32 drives GPIO~25 HIGH to engage the relay.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.62\linewidth]{purifier_decision_flowchart.png}
+\caption{Predictive Decision Engine flowchart incorporating forward forecast comparison,
+  asymmetric hysteresis dead-band ($\delta=3.0$~\ugsm), and reactive safety fallback.}
+\label{fig:decision}
+\end{figure}
+
+\subsection{Three-Stage Purification Unit}
+
+The purification train comprises: \textbf{(i)}~cyclone pre-separator (PVC, coarse
+particles $>10$~$\mu$m removed by centrifugal action); \textbf{(ii)}~HEPA-H13 pleated
+element (120$\times$120$\times$35~mm, $\geq$99.95\% particle retention at 0.3~$\mu$m
+MPPS via diffusion, interception, and impaction); \textbf{(iii)}~activated-carbon granular
+bed (bituminous coal, $\approx$1050~m$^2$/g, intended for VOC, NH$_3$, and combustion odour
+adsorption via microporous adsorption); driven by a 12~V brushless DC blower (1.5~m$^3$/min).
+
+\begin{figure}[htbp]
+\centering
+\begin{subfigure}[b]{0.49\linewidth}
+  \includegraphics[width=\linewidth]{prototype_front.jpeg}
+  \caption{Front: sensor intake, ESP32 enclosure.}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.49\linewidth}
+  \includegraphics[width=\linewidth]{prototype_rear.jpeg}
+  \caption{Rear: filter column, relay, blower.}
+\end{subfigure}
+\caption{Fabricated bench-scale NirmalNode prototype.}
+\label{fig:proto}
+\end{figure}
+
+Single-pass removal efficiency per channel:
+\begin{equation}
+\eta_p = \Bigl(1-\frac{C_{\mathrm{out}}}{C_{\mathrm{in}}}\Bigr)\times100\%
+\label{eq:eta}
+\end{equation}
+
+\subsection{Experimental Protocol}
+
+Three evaluation regimes were employed:
+
+\textbf{Controlled synthetic benchmark} ($N=500$): prequential stream modelled on
+representative industrial \pmtf{} profiles (sinusoidal baseline mean 22~\ugsm, amplitude
+14~\ugsm; combustion spikes $+55$~\ugsm{} every 22 cycles; aggregate mean 28.3~\ugsm,
+peak 77.0~\ugsm). This synthetic stream enables controlled reproducibility but does not
+claim to represent all industrial pollution dynamics.
+
+\textbf{Bangladesh public-dataset-derived stream} ($N=500$): hourly records from the
+Bangladesh Air Quality Dataset~\citep{paul2026bangladesh} (Mendeley Data,
+DOI:~\texttt{10.17632/9j447cynb9.2}; 1,048,551 observations, 103 cities) mapped to the
+14-feature format via empirical sensor transfer functions. This stream evaluates transferability
+to ambient atmospheric dynamics; it does not represent NirmalNode hardware deployment in a
+factory environment.
+
+\textbf{Aerosol chamber bench trial}: prototype mounted in 0.85~m$^3$ enclosure; incense
+smoke injected at 15~cm from inlet (inlet PM$_{2.5}>65$~\ugsm); simultaneous
+upstream/downstream PMS5003 acquisition. Results represent single-trial bench measurements
+with incense smoke as a laboratory aerosol proxy; industrial emissions (welding fumes, oil
+mist, process gases) were not evaluated.

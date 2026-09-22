@@ -1,0 +1,78 @@
+
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{Predictive vs.\ Reactive Purification}
+The 4--6 second pre-actuation interval observed in the bench trial suggests that
+combining a short-horizon PM$_{2.5}$ forecast with an asymmetric hysteresis rule
+(Eq.~\ref{eq:decision}) can establish airflow before the monitored concentration
+crosses the selected threshold. This aligns with the design intuition behind predictive
+purifier control~\citep{energyeff2024benv,beldar2025aipurifier}. However, it is important
+to note that a direct controlled comparison between predictive and reactive threshold
+control was not conducted in this study. Mendell \etal{}~\citep{mendell2025predictive}
+found limited performance benefit from predictive control over threshold control in their
+tested setting, highlighting that the advantage is context-dependent and cannot be assumed
+a priori. A formal reactive-vs-predictive comparison under identical pollution stream
+conditions---measuring fan runtime, energy, peak downstream concentration, and missed
+hazard rate---remains an important direction for future experimental work.
+
+\subsection{Online Adaptation: Practical Implications}
+Industrial microenvironments present continuously evolving emission characteristics:
+diurnal humidity alters optical scattering, process batching shifts size distributions,
+and node relocation introduces covariate shifts~\citep{basak2025spatial}. A static model
+trained on general urban data may underperform under metallic welding fumes or process-specific
+particle size distributions. The prequential SGD+PA ensemble demonstrates a 68.2\%
+cold-start-to-convergence error reduction through streaming adaptation alone---without
+pre-curated site-specific training data. On the Bangladesh public-dataset-derived stream,
+zero false negatives were observed in $N=500$ evaluated samples (exact 95\% binomial CI:
+[0.990, 1.000]); this should be understood as a single-run evaluation result on a
+transformed ambient dataset, not a field-deployment safety guarantee.
+
+\subsection{Economic and Energy Context}
+At USD~67.27 prototype BOM, NirmalNode is substantially less expensive than commercial
+PM monitoring and purification systems in the Bangladeshi retail market, though a formal
+market comparison with documented product specifications was not conducted and the
+prototype cost excludes manufacturing, certification, and maintenance. At 8.6~W peak
+power versus an assumed 10--30~kW centralized HVAC system serving a 10$\times$20~m
+factory bay, NirmalNode's localized approach demands substantially lower electrical
+power---an advantage whose magnitude depends strongly on ventilation specification,
+target coverage area, and duty cycle assumptions not fully characterized here.
+
+\subsection{Limitations}
+\label{sec:limits}
+
+\textbf{(i) Synthetic and ambient evaluation only.} Physical validation used one
+bench-scale prototype with a synthetic controlled stream and a transformed public ambient
+dataset. No factory deployment has been conducted; results should be regarded as
+bench-prototype feasibility evidence rather than industrial performance guarantees.
+
+\textbf{(ii) Single aerosol trial.} The reported PM removal efficiencies (95.7\%/98.6\%)
+come from a single bench-trial run with incense smoke. Industrial emissions (welding
+fumes, oil aerosols, combustion particulates) were not tested. Repeated trials with
+mean~$\pm$~SD and a reference-grade instrument are needed before drawing firm conclusions.
+
+\textbf{(iii) MOS cross-sensitivity.} MOS sensor readings are affected by temperature,
+humidity, and interfering gases~\citep{mos2024trac,sensorcorrection2025npj}. Gas removal
+values in Table~\ref{tab:purif-gas} are qualitative MOS differential estimates only;
+absolute gas concentration accuracy cannot be established without reference electrochemical
+instrumentation.
+
+\textbf{(iv) Network dependency and fail-safe.} The current architecture depends on
+Wi-Fi connectivity and a backend Flask server for actuation decisions. Network failure,
+packet loss, or server unavailability could interrupt control. A local threshold-based
+fallback mode and network reliability analysis are required for production deployment.
+
+\textbf{(v) Ensemble weight selection.} The 0.6/0.4 SGD+PA weights were selected on the
+first 100 samples of the same stream used for evaluation. This introduces potential
+optimistic bias; cross-validated weight selection on an independent calibration stream
+is preferable.
+
+\textbf{(vi) Horizon and scaling.} The forecast target $y_{t+h}$ uses the firmware
+2-second loop as the time step; the connection between this control-loop horizon and
+longer-range predictive benefit (1--2~h) displayed in the dashboard is illustrative only
+and was not independently evaluated.
+
+Future research will address multi-node federated incremental learning, reference-grade
+gas sensor validation, repeated filtration trials with statistical reporting, predictive
+vs.\ reactive controlled comparison, solar power integration, and long-duration field
+evaluation in genuine industrial microenvironments.

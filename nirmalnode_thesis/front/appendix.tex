@@ -1,0 +1,59 @@
+\appendix
+
+\chapter{Sensor Datasheet Summary}
+\label{app:datasheets}
+
+Table~\ref{tab:app-datasheets} summarizes the key operating specifications of the sensors used in the NirmalNode prototype, for quick reference. \TODO{Verify every figure below against the exact manufacturer datasheet / batch of the component actually purchased, since MOS-sensor gas ranges and response times vary somewhat between manufacturers and product revisions; replace any figure here that does not match your specific component's datasheet.}
+
+\begin{table}[htbp]
+\centering
+\caption{Summary of key sensor specifications (verify against manufacturer datasheet before final submission)}
+\label{tab:app-datasheets}
+\small
+\begin{tabular}{@{}p{2.6cm}p{4.6cm}p{2cm}p{3.5cm}@{}}
+\toprule
+\textbf{Sensor} & \textbf{Measured Quantity} & \textbf{Interface} & \textbf{Typical Supply} \\
+\midrule
+PMS5003 & PM1.0, PM2.5, PM10 (laser scattering) & UART (3.3~V TTL) & 5~V \\
+MiCS-4514 & CO, H$_2$, CH$_4$, C$_2$H$_5$OH, NH$_3$ (RED); NO$_2$ (OX) & Analog & 3.3--5~V \\
+MQ135 & NH$_3$, NO$_x$, benzene, smoke, CO$_2$ (broad-spectrum) & Analog & 5~V \\
+MQ136 & H$_2$S & Analog & 5~V \\
+MP135 & General air quality (supplementary) & Analog & 5~V \\
+BME280 (optional) & Temperature, humidity, pressure & I$^2$C / SPI & 3.3~V \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\chapter{ESP32 Firmware Listing (Reference Pseudocode)}
+\label{app:firmware}
+
+Algorithm~\ref{alg:esp32-loop} (Chapter~3, Section~\ref{sec:meth-software}) gives the logical structure of the ESP32 firmware loop. \TODO{Insert the actual Arduino/C++ (.ino) source code of the implemented firmware here, or attach it as a separate supplementary file / code repository link (e.g., GitHub), once development is complete. Keeping the full source code in an appendix rather than the main body preserves the thesis's readability while still making the implementation fully reproducible for examiners.}
+
+\chapter{Sample Raw Data Record}
+\label{app:sample-data}
+
+The following illustrates the JSON schema of a single sensor record transmitted from a NirmalNode unit to the cloud database, corresponding to the feature vector of Equation~\ref{eq:feature-vector}:
+
+\begin{verbatim}
+{
+  "location_id": "GAZIPUR-UNIT01-WELDING",
+  "timestamp": "2026-08-02T14:30:00+06:00",
+  "pm1_0": 0.0,
+  "pm2_5": 0.0,
+  "pm10": 0.0,
+  "co": 0.0,
+  "no2": 0.0,
+  "voc": 0.0,
+  "nh3": 0.0,
+  "h2s": 0.0,
+  "smoke_index": 0.0,
+  "temperature_c": 0.0,
+  "humidity_pct": 0.0,
+  "pressure_hpa": 0.0,
+  "hour_of_day": 14,
+  "day_of_week": "Sunday",
+  "purifier_state": "OFF"
+}
+\end{verbatim}
+
+\TODO{Replace the zero-valued placeholder fields above with an actual logged record from the deployed prototype once data collection (Section~\ref{sec:exp-data-collection}) has begun.}

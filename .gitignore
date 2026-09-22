@@ -1,0 +1,32 @@
+# Large zip files (>100MB GitHub limit)
+*.zip
+capstone zip.zip
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Database files
+*.db
+*.sqlite
+
+# Logs
+*.log
+
+# Virtual environments
+venv/
+env/
+.env/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Large binary files
+*.pptx
+NirmalNode_Defense_Presentation.html
+
+# Jupyter
+.ipynb_checkpoints/

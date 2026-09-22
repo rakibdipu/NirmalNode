@@ -1,0 +1,100 @@
+\chapter{Introduction}
+\label{ch:introduction}
+
+\section{Background}
+\label{sec:background}
+
+Air pollution is now recognized as one of the largest single environmental risk factors to human health worldwide, and its burden falls disproportionately on rapidly industrializing, low- and middle-income countries. The World Health Organization's 2021 revision of its global air quality guidelines lowered the recommended annual mean PM2.5 exposure limit from 10 $\mu$g/m$^3$ to 5 $\mu$g/m$^3$, a change motivated in part by evidence that even the non-anthropogenic (natural) background component of PM2.5 in many regions already approaches this stricter limit, leaving almost no safe margin for additional anthropogenic (human-caused) emissions \citep{pai2022who}. For small and medium-sized industrial cities in developing economies, meeting even the older, less stringent guideline has proven difficult, let alone the tightened 2021 target \citep{polezer2023new}.
+
+Bangladesh is repeatedly identified among the countries most severely affected by ambient and occupational air pollution. National-level evidence papers describe vehicular emissions, brick kilns, and unplanned industrial growth as the dominant drivers of the country's air quality crisis, with health, productivity, and economic consequences that are already substantial and growing \citep{khatun2023evidence}. Long-term satellite and ground-based reconstructions of PM2.5 across Bangladesh confirm the existence of persistent, spatially concentrated pollution hotspots rather than a uniform national exposure level, with certain industrial districts consistently registering the highest sustained concentrations and associated health risk \citep{ali2025longterm}. City-specific studies reinforce this picture at finer spatial resolution: work in the Tejgaon industrial area of Dhaka reports PM2.5 and PM10 concentrations, and associated health risk indices, that vary sharply across relatively short distances depending on proximity to specific industrial sources \citep{basak2025spatial}, while satellite-based trend analysis of Chattogram similarly finds that the country's second-largest industrial hub remains comparatively understudied despite clear pollutant loading \citep{huraira2024spatial}. Together, this body of work supports a central premise of the present thesis: industrial air pollution in Bangladesh is not experienced uniformly across a city or a factory compound -- it is concentrated at specific \emph{hotspots}, and the workers stationed at those hotspots bear a disproportionate share of the exposure.
+
+\subsection{Industrial Pollution in Bangladesh}
+\label{sec:industrial-pollution-bd}
+
+Within individual industrial premises, the point sources of hazardous air pollutants are well known to plant engineers even where they are not formally instrumented: welding stations generate metal-fume particulates and ozone; boiler rooms and generator rooms emit combustion by-products including CO, NO$_2$, and smoke; chemical storage and handling areas release VOCs and, depending on the process, NH$_3$ or H$_2$S; and factory entrances and loading zones accumulate vehicular and dust emissions. Occupational-exposure studies conducted at comparable industrial facilities elsewhere document the resulting health burden directly: fiber-cement roofing workers exposed to elevated PM2.5 show measurable lung function impairment \citep{nasri2023pm25}, construction-site workers exposed to particulate matter show a range of associated health effects \citep{sekhavati2023particulate}, and broader reviews link chronic occupational PM2.5 exposure to elevated risk of mental health conditions including depression and anxiety-spectrum disorders in addition to the well-established respiratory and cardiovascular effects \citep{alhadhrami2024pm25mental}. In Bangladesh specifically, industrial effluent and emission sources near Dhaka have been shown to elevate trace-element and particulate loading in surrounding environments to levels of ecological and health concern \citep{lisa2025investigative}, and even routine urban exposure is associated with measurable self-reported health deterioration in the general population of pollution-prone areas \citep{rahman2025perceived}.
+
+Despite this evidence, the prevailing response to industrial air pollution in Bangladesh -- where it exists at all -- is regulatory monitoring at coarse spatial and temporal resolution, or, at best, general ventilation and personal protective equipment (PPE) at the factory level. Centralized, plant-wide, or city-wide air purification is prohibitively expensive for the vast majority of small and medium enterprises that make up the bulk of the country's manufacturing base, and even where affordable purification technology exists, adoption is limited: field evidence from Dhaka households shows that willingness to pay for air purifiers is far below their real cost, driven partly by misbeliefs about indoor air quality and about purifier effectiveness \citep{chowdhury2025misbeliefs}. This combination of high point-source exposure, well-documented health consequences, and low economic feasibility of conventional whole-space purification is the specific gap that motivates the system proposed in this thesis.
+
+\begin{figure}[htbp]
+    \centering
+
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/hotspot_smoke.jpg}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/hotspot_welding.jpg}
+    \end{minipage}
+
+    \caption{Representative industrial hotspots illustrating localized worker exposure to airborne pollution, including heavy smoke exposure and welding fumes.}
+    \label{fig:hotspot-photo}
+\end{figure}
+
+\section{Problem Statement}
+\label{sec:problem-statement}
+
+Existing air quality management approaches for Bangladeshi industrial settings suffer from three compounding limitations:
+
+\begin{enumerate}[label=(\roman*)]
+    \item \textbf{Spatial mismatch.} Air quality monitoring and purification are typically designed at city or plant scale, whereas hazardous exposure is concentrated at specific micro-locations (welding bays, boiler rooms, chemical stores) that a coarse-grained system cannot selectively address.
+    \item \textbf{Reactive, not predictive, response.} Conventional systems -- where they exist at all -- report current pollutant levels rather than forecasting near-future levels, so that any mitigating action (ventilation, evacuation, purification) can only begin \emph{after} hazardous conditions have already developed.
+    \item \textbf{Static, non-adaptive intelligence.} Machine learning models used in existing air-quality prediction systems are generally trained once on a fixed historical dataset and are not designed to continue learning from the specific site at which they are deployed, so their accuracy degrades when conditions differ from the training distribution or when the unit is relocated to a new site.
+    \item \textbf{Cost and energy infeasibility at scale.} Full-scale purification units and conventional deep-learning-based prediction pipelines are computationally and financially expensive to deploy and retrain across the large number of small industrial hotspots that would need to be covered in a realistic national deployment.
+\end{enumerate}
+
+\section{Motivation}
+\label{sec:motivation}
+
+The motivation for this work follows directly from the problem statement above. If hazardous exposure is concentrated at specific, identifiable hotspots, then the most resource-efficient mitigation strategy is not to purify an entire factory floor or an entire city, but to purify the small air volume immediately surrounding an exposed worker, and only at the moments when purification is actually needed. This is directly analogous to the "Green" computing philosophy that underlies energy-aware embedded systems and lightweight machine learning: expend only the energy, compute, and material resources that a task genuinely requires, avoiding the overhead of solutions engineered for a much larger and more expensive scale.
+
+Independent evidence from the portable/room air-purifier literature supports the technical feasibility of this localized approach: HEPA-based portable purifiers have been shown to substantially reduce indoor particulate concentrations under real-world conditions \citep{lu2023realworld,cox2018effectiveness}, HEPA filtration measurably improves indoor PM2.5 levels in enclosed environments such as vehicles and public buses \citep{lee2022effect,chen2022efficacy}, and combined mechanical filtration (HEPA plus supplementary stages) has been shown to be more effective than ionization-based approaches for particulate removal \citep{dubey2021assessing,szczotko2022review}. Even during extreme pollution events such as wildfire smoke intrusion, portable HEPA filtration has been shown to meaningfully reduce indoor PM2.5 exposure \citep{chen2025fine}. These findings, drawn from purifiers designed for room- or vehicle-scale enclosed spaces, motivate the extension of the same filtration principle -- cyclone pre-separation, HEPA filtration, and activated-carbon adsorption -- to a compact, localized, worker-facing unit rather than a room-scale appliance.
+
+On the prediction side, prior IoT-based air quality systems have demonstrated that low-cost microcontrollers and commodity gas/particulate sensors can be assembled into functioning real-time monitoring networks \citep{alam2025iot,zhang2020realtime,kataria2022aiiot,mani2021aipowered}, and that low-cost sensor networks are a practical and increasingly necessary tool for air quality management specifically in developing-country contexts where reference-grade monitoring infrastructure is sparse \citep{shabbir2025paradigm}. What is comparatively unexplored in this literature, and what this thesis addresses directly, is the combination of (a) hyper-local, hotspot-targeted purification, (b) short-horizon (1--2 hour) predictive activation rather than reactive activation, and (c) continuous, incremental, area-specific model adaptation after deployment.
+
+\section{Research Gap}
+\label{sec:research-gap}
+
+Chapter 2 presents a detailed literature review; the key gap motivating this thesis can be summarized here as follows. The reviewed literature on (i) IoT-based air quality monitoring, (ii) AI-based pollution prediction, and (iii) portable/indoor air purification each address one part of the problem in isolation. Monitoring and prediction systems \citep{alam2025iot,zhang2020realtime,kataria2022aiiot,mani2021aipowered,islam2025dhaka} report or forecast pollutant levels but do not, in general, couple that forecast to an automated, localized purification response. Purification-effectiveness studies \citep{dubey2021assessing,lu2023realworld,cox2018effectiveness,chen2022efficacy,lee2022effect,chen2025fine,szczotko2022review} evaluate air cleaners as room-scale or vehicle-scale appliances rather than as hotspot-targeted, worker-proximate units, and are typically evaluated with reactive (current-condition) rather than predictive control. Health and exposure studies \citep{nasri2023pm25,sekhavati2023particulate,alhadhrami2024pm25mental,rahman2025perceived} establish the severity and specificity of the exposure problem but do not propose an engineering countermeasure. Finally, none of the reviewed systems incorporate incremental/online learning to allow a single deployed model to adapt its predictions to a new site without full retraining -- a capability that is essential for a low-cost, mass-deployable system intended to operate across many structurally different industrial premises across Bangladesh.
+
+\section{Novelty}
+\label{sec:novelty}
+
+Building on the identified gap, NirmalNode makes the following specific contributions:
+
+\begin{enumerate}
+    \item \textbf{Local hotspot purification instead of city- or plant-scale purification} -- the unit purifies only the immediate breathing zone of a worker at a specific hazard point, rather than an entire room, floor, or city.
+    \item \textbf{Green IoT architecture} using a single low-cost ESP32 microcontroller per node, minimizing hardware cost, power draw, and communication overhead.
+    \item \textbf{Green AI} -- deliberately lightweight machine learning models (e.g., SGD Regressor, Hoeffding Trees) chosen over computationally expensive deep learning, so that prediction can run at the edge with minimal energy and hardware cost.
+    \item \textbf{Adaptive AI} -- the prediction model is not fixed at training time; it continues to learn from live sensor data after deployment.
+    \item \textbf{Incremental Learning} -- model updates use online/incremental learning algorithms (River, scikit-learn partial-fit estimators) rather than full batch retraining, so the model can be updated continuously and cheaply.
+    \item \textbf{Area-specific learning} -- when a unit is relocated (e.g., from an industrial cluster in Gazipur to one in Narayanganj), the model gradually adapts to the new site's pollution signature rather than requiring a fresh, manually curated training cycle.
+    \item \textbf{Low-cost deployment suitable for Bangladesh} -- component selection is driven by cost and local availability, targeting small and medium industrial enterprises that cannot afford conventional plant-wide purification or reference-grade monitoring.
+    \item \textbf{Edge + Cloud architecture} -- time-critical sensing, prediction, and purifier activation occur at the edge (on the ESP32 / attached compute), while historical storage, dashboarding, and heavier periodic model updates occur in the cloud.
+    \item \textbf{Continuous post-deployment improvement} -- the AI model's accuracy is expected to improve over time as it accumulates more site-specific data, rather than remaining static from the point of deployment onward.
+\end{enumerate}
+
+\section{Objectives}
+\label{sec:objectives}
+
+The specific objectives of this thesis are to:
+
+\begin{enumerate}
+    \item Design and implement a low-cost, ESP32-based multi-sensor node capable of continuously measuring PM1.0, PM2.5, PM10, CO, NO$_2$, VOC, NH$_3$, H$_2$S, smoke, temperature, humidity, and pressure at an industrial hotspot.
+    \item Design a cloud-connected data pipeline that stores time-, day-, and location-tagged sensor readings for both real-time monitoring and model training/updating.
+    \item Develop an Adaptive AI model, trained initially on historical Bangladesh air-quality data, capable of forecasting hotspot-level pollutant concentrations 1--2 hours in advance.
+    \item Implement incremental (online) learning so that the deployed model updates itself using new sensor data without requiring full retraining, and so that it adapts to area-specific pollution characteristics when relocated.
+    \item Design and prototype a compact local purification unit (cyclone separator, HEPA filter, activated-carbon filter, DC fan) that activates automatically when the predictive model forecasts hazardous pollution levels.
+    \item Evaluate the complete system's predictive accuracy (MAE, RMSE, Precision, Recall, F1-score, R$^2$), purification efficiency, power consumption, and estimated deployment cost under laboratory and, where feasible, field conditions.
+\end{enumerate}
+
+\section{Expected Outcomes}
+\label{sec:expected-outcomes}
+
+The thesis demonstrates a working bench-scale prototype that: (a) forecasts PM2.5 concentration trends at a simulated industrial hotspot with a final prequential MAE of 10.616~$\mu$g/m$^3$, RMSE of 17.431~$\mu$g/m$^3$, R$^2$ = 0.7334, and hazard-detection F1-score = 0.940 (499 labelled samples); (b) automatically triggers local purification (GPIO~25 relay, D25) ahead of the PM2.5 threshold of 35.5~$\mu$g/m$^3$ with only 4 missed activations out of 500 test events (0.8\% false-negative rate); (c) demonstrably improves its own prediction accuracy over the deployment period -- rolling MAE falling from 33.4 at cold-start (sample~1) to 10.6 at convergence (sample~499), a 68\% improvement purely from streaming site-specific data -- as a direct result of incremental online learning; and (d) does so at a total prototype unit cost of approximately USD~67 (BDT~7,400) and a worst-case system power draw of 8.6~W, both compatible with deployment across resource-constrained small and medium industrial enterprises in Bangladesh.
+
+\section{Report Organization}
+\label{sec:report-organization}
+
+The remainder of this report is organized as follows. \textbf{Chapter 2} reviews the literature on industrial air monitoring, Green IoT, air purification technologies (HEPA, activated carbon, cyclone separation), Adaptive AI, incremental/online machine learning, and pollution prediction, and consolidates the research gap introduced above into a set of comparison tables. \textbf{Chapter 3} presents the complete system methodology, including hardware architecture, software and communication architecture, the cloud data pipeline, the AI training and incremental-update pipeline, and the purification decision process, supported by mathematical formulations, pseudocode, and workflow diagrams. \textbf{Chapter 4} describes the experimental setup, sensor calibration procedure, data collection protocol, and the evaluation metrics and results used to assess the prototype, together with a discussion of its limitations. \textbf{Chapter 5} concludes the thesis with a summary of contributions and outlines directions for future work, including multi-node factory-wide deployment, federated learning across nodes, further edge-AI optimization, and a solar-powered variant of the system.

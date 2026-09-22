@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NirmalNode – Undergraduate Thesis Logbook</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 12pt;
+    background: #d0d0d0;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 20px auto;
+    background: white;
+    padding: 25mm 20mm 20mm 20mm;
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    position: relative;
+    page-break-after: always;
+  }
+
+  .page::before, .page::after {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-color: #555;
+  }
+  .page::before {
+    top: 10px; left: 10px;
+    border-top: 1px solid #555;
+    border-left: 1px solid #555;
+  }
+  .page::after {
+    top: 10px; right: 10px;
+    border-top: 1px solid #555;
+    border-right: 1px solid #555;
+  }
+
+  .univ-title {
+    text-align: center;
+    font-size: 20pt;
+    font-weight: bold;
+    margin-bottom: 18px;
+  }
+
+  .dept-info {
+    text-align: center;
+    font-weight: bold;
+    font-size: 11pt;
+    line-height: 1.6;
+    margin-bottom: 18px;
+  }
+
+  .section-title {
+    text-align: center;
+    font-size: 12pt;
+    font-weight: bold;
+    text-decoration: underline;
+    margin: 20px 0 10px 0;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11pt;
+  }
+
+  table td, table th {
+    border: 1px solid black;
+    padding: 6px 10px;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  table th {
+    font-weight: bold;
+    background: white;
+  }
+
+  .label-cell {
+    font-weight: bold;
+    width: 38%;
+    text-align: center;
+  }
+
+  .red-text { color: #c00000; }
+  .blue-text { color: #0070c0; }
+
+  .page-num {
+    position: absolute;
+    bottom: 12px;
+    left: 0; right: 0;
+    text-align: center;
+    font-size: 10pt;
+    color: #333;
+    border-top: 1px solid #999;
+    padding-top: 4px;
+    margin: 0 20mm;
+  }
+
+  .sig-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+  .sig-table td {
+    border: 1px solid black;
+    padding: 10px 14px;
+    font-size: 11pt;
+    vertical-align: top;
+  }
+
+  .meeting-title {
+    text-align: center;
+    font-weight: bold;
+    text-decoration: underline;
+    font-size: 12pt;
+    margin: 14px 0 10px 0;
+  }
+
+  .agenda-cell { font-size: 10.5pt; line-height: 1.4; }
+
+  @media print {
+    body { background: white; }
+    .page { margin: 0; box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- PAGE 1: COVER -->
+<div class="page">
+  <div class="univ-title">University of Frontier Technology, Bangladesh</div>
+
+  <div class="dept-info">
+    <strong>Department of Internet of Things and Robotics Engineering (IRE)</strong><br>
+    Session: 2021-22<br>
+    Course Title: Undergraduate Thesis<br>
+    Course Code: IRE 400
+  </div>
+
+  <div style="text-align:center; font-size:12pt; font-weight:bold; text-decoration:underline; margin-bottom:28px;">
+    Undergraduate Thesis Report
+  </div>
+
+  <div class="section-title">Thesis Report Overview</div>
+  <table>
+    <tr>
+      <td class="label-cell">Thesis Title:</td>
+      <td class="red-text" style="font-weight:bold; line-height:1.6;">
+        NirmalNode: Green IoT and Adaptive AI-Assisted Local Air Purification
+        and Pollution Prediction System for Industrial Hotspots in Bangladesh
+      </td>
+    </tr>
+    <tr>
+      <td class="label-cell">Thesis Semester:</td>
+      <td>January 2026, July 2026</td>
+    </tr>
+    <tr>
+      <td class="label-cell">Reporting Semester:</td>
+      <td>January 2026</td>
+    </tr>
+    <tr>
+      <td class="label-cell">Report Submission Date:</td>
+      <td>14<sup>th</sup> September, 2026</td>
+    </tr>
+  </table>
+
+  <br><br>
+
+  <div class="section-title">Student Information</div>
+  <table>
+    <tr>
+      <th>Student ID</th>
+      <th>Student Name</th>
+    </tr>
+    <tr>
+      <td>2201014</td>
+      <td class="blue-text">Aar Raisatunnesa Hridika</td>
+    </tr>
+    <tr>
+      <td>2201030</td>
+      <td class="blue-text">Md Rakib Hassan Dipu</td>
+    </tr>
+  </table>
+
+  <br><br>
+
+  <div class="section-title">Supervisor Information</div>
+  <table>
+    <tr>
+      <th>Name</th>
+      <td class="blue-text">Md. Ashiqussalehin</td>
+    </tr>
+    <tr>
+      <th>Designation</th>
+      <td>Lecturer</td>
+    </tr>
+    <tr>
+      <th>Department</th>
+      <td>Internet of Things and Robotics Engineering</td>
+    </tr>
+    <tr>
+      <th>University</th>
+      <td>University of Frontier Technology,<br>Bangladesh</td>
+    </tr>
+  </table>
+
+  <div class="page-num">1 | P a g e</div>
+</div>
+
+<!-- PAGE 2: MEETINGS -->
+<div class="page">
+  <div class="univ-title">University of Frontier Technology, Bangladesh</div>
+  <div class="meeting-title">Meeting with Supervisor</div>
+
+  <table>
+    <tr>
+      <th style="width:18%;">Date</th>
+      <th style="width:18%;">Day</th>
+      <th style="width:44%;">Agenda</th>
+      <th style="width:20%;">Supervisor's<br>Signature</th>
+    </tr>
+    <tr><td>15-12-2025</td><td>Monday</td><td class="agenda-cell">Greeting with Supervisor</td><td></td></tr>
+    <tr><td>22-12-2025</td><td>Monday</td><td class="agenda-cell">Thesis Topic / Title Discussion</td><td></td></tr>
+    <tr><td>29-12-2025</td><td>Monday</td><td class="agenda-cell">Thesis Proposal Discussion</td><td></td></tr>
+    <tr><td>05-01-2026</td><td>Monday</td><td class="agenda-cell">Present 2 Papers and Discussion on Those Papers</td><td></td></tr>
+    <tr><td>12-01-2026</td><td>Monday</td><td class="agenda-cell">Present 3 Papers and Discussion on Those Papers</td><td></td></tr>
+    <tr><td>19-01-2026</td><td>Monday</td><td class="agenda-cell">Present 5 Papers and Discussion on Those Papers</td><td></td></tr>
+    <tr><td>26-01-2026</td><td>Monday</td><td class="agenda-cell">Present 4 Papers and Discussion on Those Papers</td><td></td></tr>
+    <tr><td>02-02-2026</td><td>Monday</td><td class="agenda-cell">Present 6 Papers and Discussion on Those Papers</td><td></td></tr>
+    <tr><td>09-02-2026</td><td>Monday</td><td class="agenda-cell">Present Those Papers Summary</td><td></td></tr>
+    <tr><td>16-02-2026</td><td>Monday</td><td class="agenda-cell">Hardware Component Selection and Discussion</td><td></td></tr>
+    <tr><td>23-02-2026</td><td>Monday</td><td class="agenda-cell">System Architecture Design Discussion</td><td></td></tr>
+    <tr><td>02-03-2026</td><td>Monday</td><td class="agenda-cell">ESP32 Firmware and Sensor Integration Discussion</td><td></td></tr>
+    <tr><td>09-03-2026</td><td>Monday</td><td class="agenda-cell">Presentation and Discussion on Tools We Learnt</td><td></td></tr>
+    <tr><td>16-03-2026</td><td>Monday</td><td class="agenda-cell">AI/ML Model Selection and Methodology Discussion</td><td></td></tr>
+  </table>
+
+  <table class="sig-table">
+    <tr>
+      <td style="width:50%;"><strong><u>Supervisor Name:</u></strong><br>Md. Ashiqussalehin<br>Lecturer<br>Department of IRE, UFTB</td>
+      <td style="width:50%;"><strong><u>Signature and Date:</u></strong><br><br><br></td>
+    </tr>
+  </table>
+
+  <div class="page-num">2 | P a g e</div>
+</div>
+
+<!-- PAGE 3: MEETINGS CONTINUED -->
+<div class="page">
+  <div class="univ-title">University of Frontier Technology, Bangladesh</div>
+  <div class="meeting-title">Meeting with Supervisor (Continued)</div>
+
+  <table>
+    <tr>
+      <th style="width:18%;">Date</th>
+      <th style="width:18%;">Day</th>
+      <th style="width:44%;">Agenda</th>
+      <th style="width:20%;">Supervisor's<br>Signature</th>
+    </tr>
+    <tr><td>23-03-2026</td><td>Monday</td><td class="agenda-cell">Prototype Hardware Assembly Review</td><td></td></tr>
+    <tr><td>30-03-2026</td><td>Monday</td><td class="agenda-cell">Web Dashboard Design and Development Discussion</td><td></td></tr>
+    <tr><td>06-04-2026</td><td>Monday</td><td class="agenda-cell">Data Collection and Field Testing Plan</td><td></td></tr>
+    <tr><td>13-04-2026</td><td>Monday</td><td class="agenda-cell">AQI Calibration and Sensor Accuracy Discussion</td><td></td></tr>
+    <tr><td>20-04-2026</td><td>Monday</td><td class="agenda-cell">Online ML Training Results Presentation</td><td></td></tr>
+    <tr><td>27-04-2026</td><td>Monday</td><td class="agenda-cell">Methodology Presentation and Finalization</td><td></td></tr>
+    <tr><td>04-05-2026</td><td>Monday</td><td class="agenda-cell">Thesis Writing — Chapter 1 &amp; 2 Review</td><td></td></tr>
+    <tr><td>11-05-2026</td><td>Monday</td><td class="agenda-cell">Thesis Writing — Chapter 3 &amp; 4 Review</td><td></td></tr>
+    <tr><td>18-05-2026</td><td>Monday</td><td class="agenda-cell">Thesis Writing — Chapter 5 &amp; Results Discussion</td><td></td></tr>
+    <tr><td>25-05-2026</td><td>Monday</td><td class="agenda-cell">Evaluation Metrics and Benchmark Comparison</td><td></td></tr>
+    <tr><td>01-06-2026</td><td>Monday</td><td class="agenda-cell">Full Thesis Draft Review and Feedback</td><td></td></tr>
+    <tr><td>08-06-2026</td><td>Monday</td><td class="agenda-cell">Preparation for Pre-Defense</td><td></td></tr>
+    <tr><td>15-06-2026</td><td>Monday</td><td class="agenda-cell">Pre-Defense Presentation Practice</td><td></td></tr>
+    <tr><td>29-06-2026</td><td>Monday</td><td class="agenda-cell">Post Pre-Defense Revision Discussion</td><td></td></tr>
+  </table>
+
+  <table class="sig-table">
+    <tr>
+      <td style="width:50%;"><strong><u>Supervisor Name:</u></strong><br>Md. Ashiqussalehin<br>Lecturer<br>Department of IRE, UFTB</td>
+      <td style="width:50%;"><strong><u>Signature and Date:</u></strong><br><br><br></td>
+    </tr>
+  </table>
+
+  <div class="page-num">3 | P a g e</div>
+</div>
+
+<!-- PAGE 4: MEETINGS FINAL -->
+<div class="page">
+  <div class="univ-title">University of Frontier Technology, Bangladesh</div>
+  <div class="meeting-title">Meeting with Supervisor (Continued)</div>
+
+  <table>
+    <tr>
+      <th style="width:18%;">Date</th>
+      <th style="width:18%;">Day</th>
+      <th style="width:44%;">Agenda</th>
+      <th style="width:20%;">Supervisor's<br>Signature</th>
+    </tr>
+    <tr><td>06-07-2026</td><td>Monday</td><td class="agenda-cell">Draft Poster Design Discussion</td><td></td></tr>
+    <tr><td>13-07-2026</td><td>Monday</td><td class="agenda-cell">Poster Finalization and Feedback</td><td></td></tr>
+    <tr><td>20-07-2026</td><td>Monday</td><td class="agenda-cell">Final Thesis Revision and Proofreading</td><td></td></tr>
+    <tr><td>27-07-2026</td><td>Monday</td><td class="agenda-cell">Defense Presentation Slide Review</td><td></td></tr>
+    <tr><td>03-08-2026</td><td>Monday</td><td class="agenda-cell">Final Defense Practice Session</td><td></td></tr>
+    <tr><td>10-08-2026</td><td>Monday</td><td class="agenda-cell">Thesis Formatting and Reference Check</td><td></td></tr>
+    <tr><td>17-08-2026</td><td>Monday</td><td class="agenda-cell">Draft Poster and Other Documents Presentation</td><td></td></tr>
+    <tr><td>24-08-2026</td><td>Monday</td><td class="agenda-cell">Final Revisions on All Chapters</td><td></td></tr>
+    <tr><td>31-08-2026</td><td>Monday</td><td class="agenda-cell">Preparation of All Final Documents</td><td></td></tr>
+    <tr><td>07-09-2026</td><td>Monday</td><td class="agenda-cell">Final Submission Document Verification</td><td></td></tr>
+    <tr><td>14-09-2026</td><td>Sunday</td><td class="agenda-cell">Final Submission of All Documents</td><td></td></tr>
+  </table>
+
+  <br>
+
+  <table class="sig-table">
+    <tr>
+      <td style="width:50%;"><strong><u>Supervisor Name:</u></strong><br>Md. Ashiqussalehin<br>Lecturer<br>Department of IRE, UFTB</td>
+      <td style="width:50%;"><strong><u>Signature and Date:</u></strong><br><br><br></td>
+    </tr>
+  </table>
+
+  <div class="page-num">4 | P a g e</div>
+</div>
+
+</body>
+</html>

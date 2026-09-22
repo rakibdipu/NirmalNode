@@ -1,0 +1,50 @@
+\chapter{Conclusion}
+\label{ch:conclusion}
+
+\section{Summary}
+\label{sec:conc-summary}
+
+This thesis has presented \textbf{NirmalNode}, a Green IoT and Adaptive AI-assisted system for local air purification at industrial pollution hotspots in Bangladesh. Motivated by the observation, supported throughout the literature reviewed in Chapter~2, that industrial air pollution exposure is concentrated at specific, identifiable micro-locations -- welding bays, boiler rooms, generator rooms, chemical storage areas -- rather than distributed uniformly across a factory or a city, the thesis argued that the prevailing city-scale or plant-scale approach to air quality management is a poor match to the actual spatial structure of the exposure problem, and proposed instead a compact, worker-proximate purification unit that activates only where and only when it is needed.
+
+Chapter~3 detailed the resulting system: a five-layer architecture spanning environmental sensing (PMS5003, MiCS-4514, MQ135, MQ136, MP135, optional BME280), an ESP32-centred edge/IoT acquisition layer, a cloud data-storage layer, an Adaptive AI prediction layer built on incremental (online) learning estimators -- SGD Regressor, Passive-Aggressive Regressor, Hoeffding Tree, and Adaptive Random Forest -- and a local purification layer (cyclone separator, HEPA filter, activated-carbon filter) triggered by a threshold-based Decision Engine 1--2 hours ahead of a forecast hazardous condition. Chapter~4 laid out the complete experimental protocol -- calibration, data collection, prequential evaluation appropriate to an incremental learner, purification-efficiency measurement, and power/cost analysis -- through which this design is to be, or has been, validated.
+
+\section{Major Contributions}
+\label{sec:conc-contributions}
+
+The specific contributions of this thesis, first stated in Section~\ref{sec:novelty} and realized concretely in Chapters~3--4, are:
+
+\begin{enumerate}
+    \item A hotspot-targeted, worker-proximate local air purification design, as an alternative to city-scale or plant-scale purification.
+    \item A Green IoT hardware architecture built around a single low-cost ESP32 controller and commodity particulate/gas sensors.
+    \item A Green AI approach to pollution forecasting using lightweight, edge-deployable incremental-learning models rather than resource-intensive deep learning.
+    \item An Adaptive AI prediction pipeline that continues to learn from live sensor data after deployment, rather than remaining frozen at its initial training distribution.
+    \item Demonstrated use of incremental (online) learning algorithms -- SGD Regressor, Passive-Aggressive Regressor, Hoeffding Tree, and Adaptive Random Forest -- as a computationally cheap alternative to full model retraining.
+    \item An area-specific adaptation mechanism, by which a relocated unit gradually re-calibrates to a new site's pollution signature purely through continued incremental learning.
+    \item A low-cost design explicitly targeted at the economic constraints of small and medium industrial enterprises in Bangladesh.
+    \item An edge--cloud architecture that keeps time-critical sensing, prediction, and purifier control local while using the cloud for historical storage and dashboarding.
+    \item A predictive (as opposed to reactive) purifier-activation strategy, in which purification begins before pollution reaches hazardous levels rather than after.
+\end{enumerate}
+
+\section{Future Work}
+\label{sec:conc-future-work}
+
+\subsection{Smart City / Multi-Node Factory-Wide Deployment}
+\label{sec:future-smartcity}
+The present prototype evaluates a single NirmalNode unit. A natural extension is a multi-node deployment covering every identified hotspot within a factory, or across multiple factories within an industrial cluster, feeding a shared cloud dashboard that gives plant management (and, potentially, regulators) a hotspot-resolved picture of an entire facility's or district's air quality, analogous in spirit to the smart-city AI/IoT prediction systems reviewed in Section~\ref{sec:lr-iot-monitoring} but operating at hotspot rather than city resolution.
+
+\subsection{Federated Learning Across Nodes}
+\label{sec:future-federated}
+As the number of deployed NirmalNode units grows, a federated learning scheme -- in which each node's incremental model periodically shares only model updates (not raw sensor data) with a coordinating server, which aggregates them into an improved shared model -- could allow units at structurally similar hotspots (e.g., all welding bays across different factories) to benefit from each other's data without any single node's raw data leaving its premises, addressing both data-privacy and bandwidth concerns for a large-scale rollout.
+
+\subsection{Further Edge-AI Optimization}
+\label{sec:future-edge-ai}
+The current design assumes prediction and incremental model updates can run either at the edge (on or alongside the ESP32) or in the cloud, depending on the exact compute budget available; future work should benchmark the on-device feasibility of each candidate incremental model (memory footprint, update latency, energy per update) directly on ESP32-class hardware, and explore quantized or otherwise further-compressed model variants where full on-device execution is desired, to reduce dependency on a reliable internet connection for the prediction path itself.
+
+\subsection{Solar-Powered Version}
+\label{sec:future-solar}
+The bench-scale prototype in this thesis is powered by a bench DC supply, with a Li-Po battery pack identified as the intended power source for a field-deployable version. A further future extension is a solar-powered variant -- a small photovoltaic panel and charge controller sized to the measured power budget of Section~\ref{sec:exp-power-result} -- to allow deployment in facilities with unreliable grid power, a common constraint among the small and medium industrial enterprises this system specifically targets, and to further advance the Green IoT design goal by reducing the system's grid-electricity footprint.
+
+\section{Concluding Remarks}
+\label{sec:conc-remarks}
+
+Industrial air pollution in Bangladesh is, as Chapter~2 documented at length, a well-evidenced and spatially specific problem, concentrated at hotspots where workers spend the majority of their working hours. NirmalNode's central argument is that the most resource-efficient response to a spatially concentrated problem is a spatially concentrated solution: purify the air a worker actually breathes, predict the hazard before it arrives, and let the system's intelligence improve for free as it operates, rather than requiring an expensive city-scale plant or a periodically-retrained model to do the same job at far greater cost. The design, methodology, and experimental protocol presented in this thesis are intended as a concrete, reproducible step toward that goal, to be completed with the measured results of Chapter~4 and extended along the directions outlined above.

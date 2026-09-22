@@ -1,0 +1,60 @@
+
+\section{Introduction}
+\label{sec:intro}
+
+Industrial workers in manufacturing, foundry, and chemical-processing sectors routinely
+endure elevated exposure to respirable particulate matter (\pmone, \pmtf, \pmten), carbon
+monoxide (CO), nitrogen oxides (NO$_x$), hydrogen sulfide (H$_2$S), and volatile organic
+compounds (VOCs)~\citep{nasri2023pm25,sekhavati2023particulate}. Chronic inhalation of
+fine particulates below 2.5~$\mu$m aerodynamic diameter is associated with alveolar
+inflammation, cardiovascular disease, pulmonary fibrosis, and impaired cognitive
+health~\citep{pai2022who}. In Bangladesh, industrial corridors such as Tejgaon, Gazipur,
+and Narayanganj routinely register ambient \pmtf{} concentrations exceeding 150~\ugsm{}
+during winter inversions, and within active factory microenvironments pollutant levels can
+increase substantially above background within seconds of process
+initiation~\citep{basak2025spatial,ali2025longterm}.
+
+Conventional centralized ventilation requires prohibitive capital expenditure and
+multi-kilowatt continuous operation, making it economically unviable for the majority of
+SMEs in developing economies~\citep{chowdhury2025misbeliefs}. Low-cost IoT sensing
+architectures have emerged as practical tools for fine-grained environmental
+surveillance~\citep{alam2025iot}; however, two recognized deficiencies persist.
+First, existing commercial purifiers activate \textit{only after} particulate concentrations
+breach hazardous thresholds---by which time the transition from clean air to hazardous
+exposure has already occurred~\citep{dubey2021assessing}. Second, static batch-trained
+forecasting models can suffer performance degradation when relocated across disparate
+factory zones due to concept drift~\citep{noman2025aiair}, and lack on-site adaptation
+capacity without batch retraining. Recent work has begun exploring predictive
+purifier control~\citep{beldar2025aipurifier,energyeff2024benv} and incremental learning
+for air quality monitoring~\citep{incremental2024asc}, though closed-loop integration
+of online learning with localized physical purification in ultra-low-cost hardware
+remains incompletely addressed.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.93\linewidth]{system_workflow.png}
+\caption{NirmalNode closed-loop workflow: edge sensing $\to$ EMA filtering $\to$ 14-feature
+  vector $\to$ Adaptive AI Model Arena $\to$ Predictive Decision Engine $\to$ GPIO relay
+  $\to$ three-stage purification, with incremental model update closing the loop.}
+\label{fig:arch}
+\end{figure}
+
+This paper presents \textbf{NirmalNode}, a closed-loop Green IoT architecture coupling
+multi-sensor hotspot monitoring, online incremental stream forecasting, predictive
+relay actuation, and localized three-stage physical filtration in a single autonomous
+node (Fig.~\ref{fig:arch}). The core contributions are:
+\begin{itemize}[leftmargin=*,topsep=2pt,itemsep=1pt]
+  \item \textbf{Integrated closed-loop edge--cloud node:} an autonomous IoT node coupling
+    multi-channel aerosol/gas sensing with a three-stage physical filtration train and
+    a direct connection between forward prediction and electromechanical actuation within
+    an ultra-low-cost (\$67.27 prototype BOM) footprint.
+  \item \textbf{Online stream-learning Model Arena:} nine parallel incremental estimators
+    under a prequential (test-then-train) protocol, electing an adaptive SGD+PA ensemble
+    that updates online to site-specific observations without manual model retraining.
+  \item \textbf{Predictive purifier control engine:} proactive relay actuation based on
+    short-horizon PM$_{2.5}$ forecasts, providing measurable actuation lead time before
+    the monitored concentration crosses the selected threshold.
+  \item \textbf{Multi-stream empirical evaluation:} zero missed hazard events on a
+    Bangladesh public-dataset-derived evaluation stream and 95.7\% single-pass \pmtf{}
+    reduction in a laboratory aerosol bench trial.
+\end{itemize}

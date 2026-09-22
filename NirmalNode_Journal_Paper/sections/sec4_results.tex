@@ -1,0 +1,272 @@
+
+\section{Results}
+\label{sec:results}
+
+\subsection{AI Forecasting Performance}
+
+Table~\ref{tab:modelarena} presents comparative prequential accuracy across all nine
+estimators plus a naive Persistence baseline on the 500-sample controlled synthetic
+benchmark. The Persistence baseline ($\hat{y}_{t+h}=y_t$) establishes the minimum
+performance floor; all incremental estimators substantially outperform it. The blended
+ensemble \textbf{M8 (SGD+PA, 0.6/0.4)} achieved the best performance across all metrics,
+with MAE of \textbf{10.616~\ugsm}, RMSE of \textbf{17.431~\ugsm}, and $R^2=\textbf{0.7334}$.
+The first sample (k=1) is excluded from prequential scoring (no prior prediction),
+yielding $N=499$ scored samples.
+
+\begin{table}[htbp]
+\centering
+\caption{Prequential accuracy and hazard metrics for the Persistence baseline,
+  all nine Model Arena estimators (M1--M9) on the controlled synthetic benchmark
+  ($N=499$ scored samples). \textbf{Bold}: champion M8. $^\dagger$Persistence values
+  are stream-statistic estimates (not prequentially evaluated).}
+\label{tab:modelarena}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}clccccc@{}}
+\toprule
+\textbf{ID} & \textbf{Model} & \textbf{MAE (\ugsm)} & \textbf{RMSE (\ugsm)} &
+\textbf{$R^2$} & \textbf{Recall} & \textbf{$F_1$} \\
+\midrule
+-- & Persistence$^\dagger$ ($\hat{y}=y_{t-1}$) & 18.9 & 27.1 & 0.42 & 0.804 & 0.738 \\
+\midrule
+M1 & SGD -- $L_2$ Ridge        & 11.200 & 18.400 & 0.712 & 0.951 & 0.925 \\
+M2 & SGD -- $L_1$ Lasso        & 12.450 & 19.820 & 0.689 & 0.948 & 0.919 \\
+M3 & SGD -- ElasticNet         & 11.900 & 19.150 & 0.701 & 0.955 & 0.926 \\
+M4 & SGD -- Huber ($\delta$=1.35) & 10.950 & 17.920 & 0.724 & 0.961 & 0.935 \\
+M5 & SGD -- SVR ($\varepsilon$-insens.) & 12.600 & 20.050 & 0.684 & 0.942 & 0.913 \\
+M6 & Passive-Aggressive $C$=1.0 & 12.800 & 20.100 & 0.681 & 0.970 & 0.927 \\
+M7 & Passive-Aggressive $C$=0.1 & 13.400 & 21.200 & 0.665 & 0.958 & 0.914 \\
+\textbf{M8} & \textbf{SGD+PA Blend 0.6/0.4~[Champion]} & \textbf{10.616} & \textbf{17.431} & \textbf{0.733} & \textbf{0.965} & \textbf{0.940} \\
+M9 & EMA Baseline (non-ML)     & 15.800 & 24.300 & 0.592 & 0.890 & 0.854 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.92\linewidth]{model_arena_comparison.png}
+\caption{Comparative prequential MAE and RMSE across all nine Model Arena estimators (M1--M9)
+  on the controlled synthetic benchmark ($N=499$ scored samples; test-then-train protocol).
+  Champion M8 (SGD+PA Blend) achieves the lowest error (MAE=10.616~\ugsm, RMSE=17.431~\ugsm);
+  M9 provides the non-ML EMA reference floor; the dashed horizontal line indicates the naive
+  Persistence baseline ($\hat{y}_{t+h}=y_t$, MAE=18.90~\ugsm).}
+\label{fig:arena-results}
+\end{figure}
+
+On the Bangladesh public-dataset-derived stream ($N=500$), the Model Arena achieved
+aggregate $R^2=0.8853$. M6 (PA, $C=1.0$) achieved the lowest standalone MAE
+(8.552~\ugsm), while the blended M8 remained competitive (MAE 9.100~\ugsm), suggesting
+reasonable transfer to ambient atmospheric dynamics under the feature mapping used.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.65\linewidth]{dashboard_real_top.jpg}\\[3pt]
+\includegraphics[width=0.65\linewidth]{dashboard_real_bottom.jpg}
+\caption{NirmalNode live operator web dashboard during active monitoring.
+  \textit{Top panel:} AQI ring gauge (AQI~80, PM$_{2.5}=25.8$~\ugsm), 1-hour and
+  2-hour indicative forecasts, XAI/LFC explanation panel, and real-time Model Arena
+  prequential leaderboard (champion M8-BLEND highlighted, MAE~5.300 at sample~79).
+  \textit{Bottom panel:} Particulate matter channels (PM$_{1.0}$, PM$_{2.5}$,
+  PM$_{10}$, optical bin counts), multi-gas sensor ADC readings (MQ-135, MQ-136,
+  MiCS RED/NOX, MP-135), live PM$_{2.5}$ vs.\ AI forecast chart, and prequential
+  online MAE/RMSE convergence plot.}
+\label{fig:dashboard}
+\end{figure}
+
+\subsection{Hazard Detection}
+
+Table~\ref{tab:confusion} presents binary confusion matrices for both evaluation streams.
+On the controlled benchmark, M8 achieves hazard Precision~0.916, Recall~0.965,
+and $F_1=0.940$, with 4 missed hazard events (FN=4, 0.8\%) out of 500. On the
+Bangladesh public-dataset-derived stream, the model achieves zero false negatives
+(Recall~1.000, $F_1=0.992$) in $N=500$ evaluated samples; the exact 95\% binomial
+confidence interval for Recall on this stream is [0.990, 1.000], reflecting the
+limitation of a single evaluation run. AUC-ROC~0.985 and PR-AUC~0.962 on this stream.
+
+\begin{table}[htbp]
+\centering
+\caption{Confusion matrices and classification performance for the predictive purifier
+  trigger ($\tau=35.5$~\ugsm). FN~=~missed hazard event.}
+\label{tab:confusion}
+\footnotesize
+\begin{tabular}{@{}lcccccccc@{}}
+\toprule
+\textbf{Stream} & \textbf{TP} & \textbf{FP} & \textbf{TN} & \textbf{FN} &
+\textbf{Precision} & \textbf{Recall} & \textbf{$F_1$} & \textbf{Accuracy} \\
+\midrule
+Controlled synth. ($N=500$)          & 109 & 10 & 377 & 4  & 0.916 & 0.965 & 0.940 & 97.2\% \\
+Bangladesh pub.-data ($N=500$) & 381 & 6  & 113 & \textbf{0} & 0.984 & \textbf{1.000} & \textbf{0.992} & 98.8\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\begin{subfigure}[b]{0.48\linewidth}
+  \includegraphics[width=\linewidth]{confusion_matrix.png}
+  \caption{Confusion matrix (controlled stream).}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.48\linewidth}
+  \includegraphics[width=\linewidth]{roc_pr_curves.png}
+  \caption{ROC (AUC=0.985) and PR (AUC=0.962).}
+\end{subfigure}
+\caption{Binary classification diagnostics for the predictive purifier trigger.}
+\label{fig:roc}
+\end{figure}
+
+\subsection{Online Adaptation and Error Convergence}
+
+Figure~\ref{fig:convergence} shows the prequential rolling MAE across the full 500-sample
+lifespan in three operationally meaningful phases:
+
+\begin{figure}[htbp]
+\centering
+\begin{subfigure}[b]{0.82\linewidth}
+  \centering
+  \includegraphics[width=\linewidth]{prequential_error_plot.jpg}
+  \caption{Rolling prequential MAE and RMSE across Cold-Start (1--50), Adaptation (50--200), and Convergence (200--500) phases.}
+  \label{fig:prequential-error}
+\end{subfigure}\\[6pt]
+\begin{subfigure}[b]{0.58\linewidth}
+  \centering
+  \includegraphics[width=\linewidth]{residual_distribution.png}
+  \caption{Residual distribution and Q--Q normality plot ($\mu=-0.12$~\ugsm, $\sigma=17.4$~\ugsm).}
+  \label{fig:residual-qq}
+\end{subfigure}
+\caption{Online adaptation evidence and residual error diagnostics for champion model M8.}
+\label{fig:convergence}
+\end{figure}
+
+\textbf{Cold-Start (samples 1--50):} MAE drops from \textbf{33.4~\ugsm} to 13.9~\ugsm{}
+as the ensemble absorbs site-specific data.
+\textbf{Adaptation (50--200):} MAE declines to 11.4~\ugsm{} as feature covariance stabilizes.
+\textbf{Convergence (200--500):} MAE stabilizes at \textbf{10.616~\ugsm}
+(RMSE~17.431~\ugsm), a \textbf{68.2\% reduction} from cold-start MAE via streaming
+adaptation without manual retraining. The residual mean is close to zero
+($\mu=-0.12$~\ugsm), indicating limited average bias; approximate residual normality is
+assessed qualitatively via the Q-Q plot (Fig.~\ref{fig:convergence}b).
+
+\subsection{Explainability via Linear Feature Contribution (XAI)}
+
+Because M8 blends regularized linear estimators, each prediction decomposes exactly into
+per-feature Linear Feature Contribution (LFC) terms under standardized inputs:
+\begin{equation}
+\phi_i = w_{\mathrm{blend},i}\cdot\frac{x_i-\mu_i}{\sigma_i},\qquad
+\hat{y} = b_{\mathrm{blend}}+\sum_{i=1}^{14}\phi_i
+\label{eq:lfc}
+\end{equation}
+
+\noindent where $w_{\mathrm{blend},i}$ is the blended model coefficient, $\mu_i$ and
+$\sigma_i$ are the running online scaler statistics. This provides fully interpretable,
+instance-level attribution without requiring a separate explanation model.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.60\linewidth]{xai_feature_importance.png}
+\caption{Global feature importance ranking of champion model M8.
+  PM$_{2.5}$-related features (EMA, current, lag-1 delta) dominate
+  $>$64\% of total decision weight, supporting physically interpretable learning.}
+\label{fig:xai}
+\end{figure}
+
+For a high-pollution instance (PM$_{2.5}=78$~\ugsm), the lag-1 delta applied restorative
+damping ($\phi=-27.80$~\ugsm), while the PM$_{2.5}$ EMA ($\phi=+15.47$), optical counts
+($+14.65$), PM$_{10}$ ($+14.10$), and current PM$_{2.5}$ ($+13.76$) elevated the forecast
+toward the hazard range. This feature alignment with atmospheric aerosol transport physics
+supports operational interpretability and physical plausibility assessment of model behaviour.
+
+\subsection{Physical Purification Efficiency}
+
+Table~\ref{tab:purif-pm} reports quantitative single-pass PM removal measured by
+paired PMS5003 sensors in the aerosol bench trial. Gas-phase responses are reported
+separately in Table~\ref{tab:purif-gas} as qualitative indicators only.
+
+\begin{table}[htbp]
+\centering
+\caption{Quantitative PM single-pass removal (bench trial, incense smoke, 0.85~m$^3$
+  chamber, single measurement run). PMS5003 is not a reference-grade instrument;
+  results should be interpreted as bench prototype estimates.}
+\label{tab:purif-pm}
+\footnotesize
+\begin{tabular}{@{}llccc@{}}
+\toprule
+\textbf{Pollutant} & \textbf{Stage} & \textbf{$C_\mathrm{in}$ (\ugsm)} &
+\textbf{$C_\mathrm{out}$ (\ugsm)} & \textbf{$\eta_p$ (\%)} \\
+\midrule
+PM$_{1.0}$ & HEPA-H13         & 42  & 1.8 & \textbf{95.7} \\
+PM$_{2.5}$ & HEPA-H13         & 67  & 2.9 & \textbf{95.7} \\
+PM$_{10}$  & Cyclone+HEPA     & 98  & 1.4 & \textbf{98.6} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{\textbf{Qualitative gas-phase observations only} --- MOS differential
+  ADC readings before/after activated-carbon stage. These values are \emph{not}
+  calibrated gas concentrations and are not comparable to quantitative PM results.
+  Reference-grade electrochemical analysis was not available.}
+\label{tab:purif-gas}
+\footnotesize
+\begin{tabular}{@{}llcc@{}}
+\toprule
+\textbf{Gas} & \textbf{Stage} & \textbf{Observation} & \textbf{Approx. ADC change} \\
+\midrule
+VOCs   & Activated carbon & Reduced ADC response & $\sim$60--70\% decrease (qualitative) \\
+H$_2$S & Activated carbon & Below sensor noise floor & $>$50\% decrease (qualitative) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+In the aerosol bench trial, the predictive engine energized the blower \textbf{4--6 seconds
+prior} to the monitored concentration crossing $\tau=35.5$~\ugsm, establishing pre-actuation
+airflow before peak plume arrival. This single-trial observation should be interpreted as
+a bench-scale feasibility indication; repeated trials with statistical characterization
+are needed to fully establish the lead-time distribution. Measured PM$_{2.5}$ bench
+removal (95.7\%) is consistent with independent HEPA literature: Lu~\etal{}~\citep{lu2023realworld}
+reported 75--91\% and Cox~\etal{}~\citep{cox2018effectiveness} reported 73--95\% in
+controlled settings.
+
+\subsection{Power and Prototype Cost}
+
+\begin{table}[htbp]
+\centering
+\caption{Measured power profile and prototype Bill of Materials (BOM) at retail
+  Dhaka pricing (BDT~110/USD, August~2025). Prototype component cost only; does not
+  include manufacturing, certification, labour, or logistics.}
+\label{tab:power}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}p{5.2cm}p{3.8cm}cc@{}}
+\toprule
+\multicolumn{4}{@{}l}{\textit{(a) Power profile}} \\
+\midrule
+\textbf{Subsystem} & \textbf{State} & \textbf{Power (W)} \\
+\cmidrule{1-3}
+ESP32 + sensors + Wi-Fi & TX burst   & 2.6 \\
+12~V DC blower          & Fan ON     & 6.0 \\
+\textbf{System (standby)}\quad & Fan OFF   & \textbf{1.8} \\
+\textbf{System (peak)}  & Fan ON + Wi-Fi & \textbf{8.6} \\
+\midrule
+\multicolumn{4}{@{}l}{\textit{(b) Prototype BOM (selected items)}} \\
+\midrule
+\textbf{Component} & \textbf{Spec.} & \textbf{BDT} & \textbf{USD} \\
+\cmidrule{1-4}
+ESP32-WROOM-32      & Dev module     & 350  & \$3.18 \\
+PMS5003 OPC         & Plantower      & 2200 & \$20.00 \\
+MiCS-4514           & SGX dual gas   & 1650 & \$15.00 \\
+MQ135/MQ136/MP135   & 3$\times$ MOS  & 580  & \$5.27 \\
+BME280              & Bosch T/RH/P   & 280  & \$2.55 \\
+Relay + blower      & 12~V DC        & 490  & \$4.45 \\
+Cyclone+HEPA+carbon & 3-stage train  & 1250 & \$11.36 \\
+Enclosure/wiring    & Acrylic/PVC    & 600  & \$5.45 \\
+\textbf{Total}      &                & \textbf{7,400} & \textbf{\$67.27} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Under a 22.6\% duty cycle (proportion of samples above $\tau$), estimated battery life
+from a 55.5~Wh pack is approximately 17~hours, assuming 85\% converter efficiency and
+full usable capacity (calculation: $55.5 \times 0.85 / (0.226 \times 8.6 + 0.774 \times 1.8)
+\approx 17.1$~h), sufficient for a typical industrial double-shift.

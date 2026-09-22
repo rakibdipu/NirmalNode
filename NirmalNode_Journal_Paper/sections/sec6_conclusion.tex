@@ -1,0 +1,24 @@
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+This paper described the design and bench-scale evaluation of \textbf{NirmalNode}, a
+closed-loop Green IoT architecture integrating real-time microenvironmental sensing,
+online incremental stream forecasting, predictive relay actuation, and localized
+three-stage physical air purification. On a controlled synthetic benchmark ($N=499$
+prequential samples), the blended SGD+PA ensemble (M8) achieved MAE~10.616~\ugsm,
+$R^2=0.7334$, and $F_1=0.940$ for hazard-actuation, with a 68.2\% reduction from
+cold-start tracking error through pure streaming adaptation. On a Bangladesh
+public-dataset-derived evaluation stream, zero false negatives were observed in
+$N=500$ samples ($F_1=0.992$, AUC-ROC~0.985). Laboratory bench trials recorded 95.7\%
+single-pass PM$_{2.5}$ reduction and 98.6\% PM$_{10}$ reduction with a 4--6 second
+pre-actuation observation; gas-phase results are qualitative MOS indicators only.
+System peak power is 8.6~W with an indicative prototype component BOM of
+USD~67.27 (BDT~7,400).
+
+These results support the feasibility of the proposed integrated architecture for
+localized occupational exposure monitoring and targeted air cleaning in
+resource-constrained industrial settings. Field validation in genuine factory
+environments, repeated filtration trials with reference instrumentation, predictive
+vs.\ reactive controlled comparison, and multi-node deployment remain necessary
+steps toward a deployable system.
