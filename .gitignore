@@ -1,32 +1,63 @@
-# Large zip files (>100MB GitHub limit)
+# Large files
 *.zip
-capstone zip.zip
+*.rar
+*.7z
 
-# Python cache
+# Python
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
+*.pkl
+!models/*.pkl
 
-# Database files
+# Database & logs
 *.db
 *.sqlite
-
-# Logs
 *.log
 
-# Virtual environments
-venv/
-env/
-.env/
+# Presentations & thesis (not for GitHub)
+*.pptx
+*.docx
+thesis_last/
+thesis_src/
+thesis_upgraded/
+nirmalnode_thesis/
+journal_nirmalnode/
+NirmalNode_Journal_Paper/
+NirmalNode_Full_Package/
+NirmalNode_SensorTest/
+capstone/
+figures_academic/
+extracted_figs/
+NirmalNode_Defense_Presentation.html
+NirmalNode_Capstone_NEW.html
 
-# OS files
+# Build/audit scripts (internal use only)
+audit*.py
+build_*.py
+generate_*.py
+verify_*.py
+update_*.py
+sanitize_*.py
+scan_*.py
+check_*.py
+find_*.py
+fix_*.py
+make_deck.py
+gen_check.py
+view_tikz.py
+test_*.py
+test_*.html
+test_*.txt
+
+# OS
 .DS_Store
 Thumbs.db
 
-# Large binary files
-*.pptx
-NirmalNode_Defense_Presentation.html
-
 # Jupyter
 .ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
